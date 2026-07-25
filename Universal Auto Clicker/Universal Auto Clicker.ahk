@@ -22,7 +22,6 @@ global HWNDList            := []
 global PickedX             := 0
 global PickedY             := 0
 
-; Capture the foreground window BEFORE anything else runs
 global PrevActiveHWND := 0
 try PrevActiveHWND := WinGetID("A")
 
