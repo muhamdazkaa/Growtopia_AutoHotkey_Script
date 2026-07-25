@@ -1,7 +1,11 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
 
-; Required settings for background input reliability
+; ========================================
+; =        Author : muhamdazkaa          =
+; =    github : <github/muhamdazkaa>     =
+; =            MIT License               =
+; ========================================
 SetControlDelay -1
 SetKeyDelay 50, 50
 
