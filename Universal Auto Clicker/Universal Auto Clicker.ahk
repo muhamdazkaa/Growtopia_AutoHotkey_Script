@@ -6,6 +6,8 @@
 ; =    github : <github/muhamdazkaa>     =
 ; =            MIT License               =
 ; ========================================
+
+
 SetControlDelay -1
 SetKeyDelay 50, 50
 
@@ -82,9 +84,7 @@ BuildWindowList() {
 
 WinList := BuildWindowList()
 
-; ==========================================
-; GUI — Fixed size, no resize/max/min
-; ==========================================
+
 MyGui := Gui("-Resize -MaximizeBox -MinimizeBox", "Auto Click Universal")
 MyGui.BackColor := clrBG
 MyGui.SetFont("s9 c" clrFont, "Segoe UI")
@@ -215,7 +215,6 @@ RefreshWindowList(*) {
     ddlWin.Delete()
     ddlWin.Add(newList)
 
-    ; Try to re-select the previously selected window
     foundIdx := 0
     for idx, id in HWNDList {
         if (id == prevHWND) {
@@ -224,7 +223,6 @@ RefreshWindowList(*) {
         }
     }
 
-    ; If not found, fallback to the window that was active before GUI launched
     if (!foundIdx) {
         for idx, id in HWNDList {
             if (id == PrevActiveHWND) {
@@ -240,7 +238,7 @@ RefreshWindowList(*) {
     ddlWin.Choose(foundIdx)
     TargetHWND := HWNDList.Length ? HWNDList[foundIdx] : 0
 
-    ; If the previously hidden window is no longer in list, show it
+
     if (CurrentlyHiddenHWND && !WinExist("ahk_id " CurrentlyHiddenHWND)) {
         CurrentlyHiddenHWND := 0
         chkHide.Value := 0
@@ -284,12 +282,10 @@ PickCoord(*) {
     }
     WinActivate("ahk_id " TargetHWND)
     ToolTip("Click on the target position...")
-    ; Wait for left mouse button click
     KeyWait("LButton", "D")
     CoordMode("Mouse", "Client")
     MouseGetPos(&mX, &mY, &winUnder)
     ToolTip()
-    ; Only accept if the click is inside the target window
     if (winUnder != TargetHWND) {
         MsgBox("Click was outside the target window. Try again.", "Warning", "Icon!")
         if (wasHidden)
@@ -405,7 +401,7 @@ RunActions(*) {
     if !TargetHWND || !WinExist("ahk_id " TargetHWND)
         return
 
-    ; If already looping, pressing hotkey again stops the loop
+
     if (IsLooping) {
         IsLooping := false
         return
@@ -416,12 +412,10 @@ RunActions(*) {
     intervalMs  := IsInteger(saved.LoopInterval) ? Integer(saved.LoopInterval) : 500
 
     if (!doLoop) {
-        ; Run once
         ExecuteQueue()
         return
     }
 
-    ; Start looping
     IsLooping := true
     btnToggle.Text := "STOP LOOP  —  or press hotkey again"
     while (IsLooping) {
