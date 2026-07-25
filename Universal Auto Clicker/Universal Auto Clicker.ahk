@@ -72,7 +72,6 @@ BuildWindowList() {
         if (title == "" || title == "Program Manager")
             continue
         exStyle := WinGetExStyle("ahk_id " id)
-        ; Skip tool windows (system tray, floating toolbars) without app window flag
         if ((exStyle & 0x80) && !(exStyle & 0x40000))
             continue
         winList.Push(title " [" id "]")
@@ -99,7 +98,7 @@ ddlWin.OnEvent("Change", OnWindowSelect)
 btnRefresh := MyGui.Add("Button", "x398 y30 w30 h24", "↺")
 btnRefresh.OnEvent("Click", RefreshWindowList)
 
-; Auto-select the window that was active before this script stole focus
+
 defaultIdx := 1
 for idx, id in HWNDList {
     if (id == PrevActiveHWND) {
@@ -121,30 +120,23 @@ MyGui.SetFont("s9 c" clrSub, "Segoe UI")
 MyGui.Add("Text", "xm y98 w416", "2. ADD ACTION")
 MyGui.SetFont("s9 c" clrFont, "Segoe UI")
 
-; Step A — Pick coordinate
 MyGui.Add("Text", "xm y116 w106 h24 +0x200", "Step A — Coord:")
 btnPick  := MyGui.Add("Button", "x118 y116 w140 h24", "Pick Coordinate  [Click]")
 btnPick.OnEvent("Click", PickCoord)
 txtCoord := MyGui.Add("Text", "x268 y120 w160 vCoordDisplay c" clrSub, "X: —   Y: —")
 
-; Step B — Action type
-; IMPORTANT: Both Radio controls must be adjacent in Z-order (no other controls between them)
-; so Windows treats them as one mutually exclusive group.
 MyGui.Add("Text", "xm y148 w416 c" clrSub, "Step B — Action type:")
 
 radClick := MyGui.Add("Radio", "xm y166 w110 h22 vActionType Checked c" clrFont, "Mouse Click")
 radKey   := MyGui.Add("Radio", "xm y192 w110 h22 c" clrFont, "Keyboard / Send")
 
-; Controls tied to each radio — placed AFTER both radios to preserve grouping
 ddlMouseBtn := MyGui.Add("DropDownList", "x120 y163 w90 h22 vMouseButton Background" clrControl " Choose1", ["Left", "Right", "Middle"])
 txtInput    := MyGui.Add("Edit",         "x120 y189 w296 h22 vKeyInput Background" clrControl, "")
 
-; Sleep after action
 MyGui.Add("Text", "xm y220 w128 h22 +0x200 c" clrSub, "Sleep after action (ms):")
 numSleep := MyGui.Add("Edit", "x138 y220 w70 h22 vSleepMs Background" clrControl, "300")
 MyGui.Add("UpDown", "Range1-99999", 300)
 
-; Add button
 btnAdd := MyGui.Add("Button", "xm y250 w416 h28", "+ Add Action to Queue")
 btnAdd.OnEvent("Click", AddAction)
 
@@ -163,7 +155,6 @@ lvActions.ModifyCol(3, 214)
 lvActions.ModifyCol(4, 80)
 lvActions.OnEvent("Click", OnQueueClick)
 
-; Edit sleep for selected row
 MyGui.SetFont("s9 c" clrSub, "Segoe UI")
 MyGui.Add("Text", "xm y448 w136 h24 +0x200", "Edit sleep for selected:")
 MyGui.SetFont("s9 c" clrFont, "Segoe UI")
@@ -172,7 +163,6 @@ MyGui.Add("UpDown", "Range1-99999", 300)
 btnUpdateSleep := MyGui.Add("Button", "x226 y448 w90 h24", "Update Sleep")
 btnUpdateSleep.OnEvent("Click", UpdateSleep)
 
-; Remove / Clear
 btnDel   := MyGui.Add("Button", "xm y480 w203 h24", "Remove Selected")
 btnClear := MyGui.Add("Button", "x223 y480 w203 h24", "Clear All")
 btnDel.OnEvent("Click", DeleteAction)
@@ -307,8 +297,6 @@ AddAction(*) {
 
     rowNum := ActionQueue.Length + 1
 
-    ; saved.ActionType == 1  →  Mouse Click radio is selected
-    ; saved.ActionType == 0  →  Keyboard / Send radio is selected
     if (saved.ActionType == 1) {
         if (PickedX == 0 && PickedY == 0) {
             MsgBox("Pick a coordinate first using 'Pick Coordinate [F3]'.", "Warning", "Icon!")
