@@ -85,3 +85,7 @@ Uses AutoHotkey `ControlSend` syntax:
 - Coordinates are in the target window's **client coordinate space**, so they stay consistent across window positions and screen resolutions
 - If the target window is closed while a loop is running, the loop stops automatically
 
+## Important
+
+- may in some condition is bugging.
+
